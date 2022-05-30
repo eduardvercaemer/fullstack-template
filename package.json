@@ -1,0 +1,25 @@
+{
+  "name": "leo-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Vercaemer Eduard <vercaemereduard@gmail.com>",
+  "license": "MIT",
+  "targets": {
+    "client": {
+      "source": "src/client/index.html"
+    },
+    "server": {
+      "source": "src/server/main.js",
+      "context": "node"
+    }
+  },
+  "devDependencies": {
+    "parcel": "^2.6.0",
+    "process": "^0.11.10"
+  },
+  "dependencies": {
+    "express": "^4.18.1",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0"
+  }
+}
