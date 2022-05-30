@@ -17,7 +17,7 @@ const clientConfig = {
   entries: 'src/client/index.html',
   defaultTargetOptions: {
     distDir: 'dist/client',
-  },
+  }
 }
 
 const serverConfig = {
@@ -76,4 +76,3 @@ exports.watchServer = watchServer
 exports.serverMon = serverMon
 
 exports.dev = gulp.parallel(serveClient, watchServer, serverMon)
-

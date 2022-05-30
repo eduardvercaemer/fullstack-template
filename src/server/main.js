@@ -1,6 +1,8 @@
 import express from 'express'
+import cors from 'cors'
 
 express()
-  .get('/', (req, res) => res.send('hello, world'))
+  .use(cors())
+  .get('/api', (req, res) => res.send('hello, world'))
   .listen(8080);
 
