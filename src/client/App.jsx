@@ -1,11 +1,13 @@
 import React from 'react'
-const API_URL = process.env.API_URL
+import config from '../config'
+
+const apiUrl = config.apiUrl
 
 export default function App({}) {
   const [msg, setMsg] = React.useState('')
 
   React.useEffect(() => {
-    fetch(`http://localhost:8080/api`)
+    fetch(`${apiUrl}`)
       .then(res => res.text())
       .then(data => setMsg(data))
   }, [])
@@ -17,4 +19,3 @@ export default function App({}) {
     </>
   )
 }
-

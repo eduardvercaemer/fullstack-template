@@ -2,27 +2,34 @@ const { Parcel } = require('@parcel/core')
 const path = require('path')
 const gulp = require('gulp')
 const nodemon = require('gulp-nodemon')
+const config = require('./src/config')
+
+const mode = process.env.NODE_ENV || 'production'
 
 const commonConfig = {
   defaultConfig: '@parcel/config-default',
   additionalReporters: [
     {
       packageName: '@parcel/reporter-cli',
-      resolveFrom: path.resolve(__dirname, 'node_modules')
-    }
+      resolveFrom: path.resolve(__dirname, 'node_modules'),
+    },
   ],
+  mode,
 }
 
 const clientConfig = {
   entries: 'src/client/index.html',
   defaultTargetOptions: {
     distDir: 'dist/client',
-  }
+  },
+  env: {
+    NODE_ENV: mode,
+  },
 }
 
 const serverConfig = {
   entries: 'src/server/main.js',
-  targets: [ 'node' ],
+  targets: ['node'],
   defaultTargetOptions: {
     distDir: 'dist/server',
   },
@@ -31,12 +38,16 @@ const serverConfig = {
 const clientBundler = new Parcel({
   ...commonConfig,
   ...clientConfig,
-  serveOptions: {
-    port: 3000,
-  },
-  hmrOptions: {
-    port: 3000,
-  },
+  serveOptions: config.clientPort
+    ? {
+        port: config.clientPort,
+      }
+    : undefined,
+  hmrOptions: config.clientPort
+    ? {
+        port: config.clientPort,
+      }
+    : undefined,
 })
 
 const serverBundler = new Parcel({
@@ -58,12 +69,12 @@ function serverMon(done) {
     quiet: true,
     done,
   })
-  
+
   stream
-    .on('restart', function() {
+    .on('restart', function () {
       console.log('server restarted...')
     })
-    .on('crash', function() {
+    .on('crash', function () {
       console.error('application has crashed...')
       stream.emit('restart', 10)
     })
