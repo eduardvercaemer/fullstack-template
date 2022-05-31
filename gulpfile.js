@@ -2,10 +2,8 @@ const { Parcel } = require('@parcel/core')
 const path = require('path')
 const gulp = require('gulp')
 const nodemon = require('gulp-nodemon')
-const devConfig = require('./src/config/development')
-const prodConfig = require('./src/config/production')
 
-const commonConfig = config => ({
+const commonConfig = {
   defaultConfig: '@parcel/config-default',
   additionalReporters: [
     {
@@ -13,56 +11,62 @@ const commonConfig = config => ({
       resolveFrom: path.resolve(__dirname, 'node_modules'),
     },
   ],
-  mode: config.mode,
-})
+}
 
-const clientConfig = config => ({
+const clientConfig = mode => ({
   entries: 'src/client/index.html',
   defaultTargetOptions: {
     distDir: 'dist/client',
   },
   env: {
-    NODE_ENV: config.mode,
+    NODE_ENV: mode,
   },
 })
 
-const serverConfig = config => ({
+const serverConfig = {
   entries: 'src/server/main.js',
   targets: ['node'],
   defaultTargetOptions: {
     distDir: 'dist/server',
   },
+}
+
+const clientBundler = new Parcel({
+  ...commonConfig,
+  ...clientConfig('production'),
 })
 
-const clientBundler = config =>
-  new Parcel({
-    ...commonConfig(config),
-    ...clientConfig(config),
-    serveOptions: config.clientPort
-      ? {
-          port: config.clientPort,
-        }
-      : undefined,
-    hmrOptions: config.clientPort
-      ? {
-          port: config.clientPort,
-        }
-      : undefined,
-  })
+const clientServer = new Parcel({
+  ...commonConfig,
+  ...clientConfig('development'),
+  serveOptions: {
+    port: 3000,
+  },
+  hmrOptions: {
+    port: 3000,
+  },
+})
 
-const serverBundler = config =>
-  new Parcel({
-    ...commonConfig(config),
-    ...serverConfig(config),
-  })
+const serverBundler = new Parcel({
+  ...commonConfig,
+  ...serverConfig,
+})
 
-const watchClient = config => () => clientBundler(config).watch()
+function watchClient() {
+  return clientServer.watch()
+}
 
-const buildClient = config => () => clientBundler(config).run()
+function buildClient() {
+  return clientBundler.run()
+}
 
-const watchServer = config => () => serverBundler(config).watch()
+function watchServer() {
+  return serverBundler.watch()
+}
 
-const buildServer = config => () => serverBundler(config).run()
+function buildServer() {
+  return serverBundler.run()
+}
 
 function serverMon(done) {
   const stream = nodemon({
@@ -81,10 +85,6 @@ function serverMon(done) {
     })
 }
 
-exports.dev = gulp.parallel(
-  watchClient(devConfig),
-  watchServer(devConfig),
-  serverMon
-)
+exports.dev = gulp.parallel(watchClient, watchServer, serverMon)
 
-exports.build = gulp.parallel(buildClient(prodConfig), buildServer(prodConfig))
+exports.build = gulp.parallel(buildClient, buildServer)
