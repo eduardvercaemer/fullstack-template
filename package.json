@@ -15,7 +15,7 @@
   },
   "scripts": {
     "dev": "concurrently npm:watch-*",
-    "build": "concurrently npm:build-*",
+    "build": "concurrently -m1 npm:build-*",
     "start": "node dist/server/main.js",
     "watch-client": "parcel serve --target client",
     "watch-server": "parcel watch --target server --port 8878",
