@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "author": "Vercaemer Eduard <vercaemereduard@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "dev": "gulp dev",
+    "build": "gulp build",
+    "start": "node ./dist/server/main.js"
+  },
   "targets": {
     "node": {
       "context": "node"

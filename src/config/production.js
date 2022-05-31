@@ -1,6 +1,6 @@
 exports.apiPort = process.env.PORT
 
-exports.apiUrl = `https://example.com/api/v1`
+exports.apiUrl = `https://dry-lake-04355.herokuapp.com/api`
 
 exports.serveClient = true
 
