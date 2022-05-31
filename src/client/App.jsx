@@ -1,3 +1,6 @@
+/**
+ * This is the react app entry point for the client side.
+ */
 import React from 'react'
 import config from '../config'
 

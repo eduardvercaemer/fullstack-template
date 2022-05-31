@@ -1,3 +1,8 @@
+/**
+ * Your backend code goes here in the ./server directory, and can be
+ * referenced from the client via the `apiUrl` variable, this accounts
+ * for development and production environments.
+ */
 import express from 'express'
 import cors from 'cors'
 import path from 'path'
